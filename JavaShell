@@ -1,0 +1,202 @@
+import java.io.*;
+import java.util.*;
+
+/**
+
+ *
+
+ * @author PJ Banerjee
+ 
+ *  Below is code for a simple shell written in Java, accepts user commands and parameters and outputs results to console
+ 
+ *   For native Unix systems and Mac OSX, accepts Unix commands such as ls, whoami, date, pwd
+ 
+ *   Accepts custom commands such as history, !!, and !<integer> 
+
+ */
+
+public class JavaShell {
+
+    /**
+
+     * @param args the command line arguments
+
+     * @throws java.io.IOException
+
+     */
+
+    public static void main(String[] args) throws java.io.IOException {
+
+        // TODO code application logic here
+
+        
+
+        String commandLine;
+
+        BufferedReader console = new BufferedReader(new InputStreamReader(System.in));
+
+        String historyLine;
+
+        List<String> historyList = new ArrayList<String>();
+
+        boolean run = true;
+
+        boolean branch = true;
+
+        List<String> commandList = new ArrayList<String>();
+
+        String[] parts;
+
+        
+
+        
+
+        while (true) 
+
+         {
+
+           System.out.print("jsh>");
+
+           commandLine = console.readLine();
+
+           historyList.add(commandLine);
+
+           parts = commandLine.split(" ");
+
+           
+
+           String s;
+
+           s=""+parts[0].charAt(0);
+
+                  
+
+           if(commandLine.equals("exit"))
+
+             break;
+
+          
+
+           else if(parts[0].equals("history"))
+
+            {
+
+             for(int i =0; i < historyList.size()-1; i++)
+
+              {
+
+               historyLine = historyList.get(i);
+
+               System.out.println(i+" "+historyLine);
+
+               run=false;
+
+              }
+
+            }
+
+           else if(parts[0].equals("!!"))
+
+            {
+
+               historyLine = historyList.get(historyList.size()-2);
+
+               String[] hparts = historyLine.split(" ");
+
+               for(int i = 0; i < hparts.length; i++)
+
+                {
+
+                  commandList.add(hparts[i]);   
+
+                }
+
+             run = true;
+
+             branch = false;
+
+            }
+
+         
+
+         else if(branch==true&& s.equals("!"))
+
+           {
+
+        
+
+             String[] index;
+
+             index = commandLine.split("!");
+
+             int dex = Integer.parseInt(index[1]);
+
+             commandList.add(historyList.get(dex-1)); 
+
+             branch = false;
+
+           }
+
+         
+
+         else if(branch == true)
+
+          { 
+
+           for(int i = 0; i < parts.length; i++)
+
+            {
+
+              commandList.add(parts[i]);   
+
+            }
+
+          }
+
+           
+
+           
+
+          if(run==true) {
+
+        
+
+             ProcessBuilder pb = new ProcessBuilder(commandList);
+
+             Process proc = pb.start();
+
+            
+
+        
+
+             InputStream is = proc.getInputStream();
+
+             InputStreamReader isr = new InputStreamReader(is);
+
+             BufferedReader br = new BufferedReader(isr);
+
+        
+
+             String line;
+
+             while((line = br.readLine()) !=null)
+
+               System.out.println(line);
+
+               br.close();
+
+               
+
+              commandList.clear();
+
+           }
+
+          branch = true;
+
+          run = true;
+
+   }
+
+  }
+
+}
