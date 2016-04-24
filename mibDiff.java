@@ -7,6 +7,12 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.*;
 
+
+/*
+This was a java script I wrote to check for difference of machine configuration files.  It helped me to automate part of my
+work flow
+*/
+
 public class mibDiff {
 	
 	
